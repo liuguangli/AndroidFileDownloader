@@ -1,0 +1,9 @@
+*.bak
+build/*
+*/build/*
+.idea/*
+.gradle/*
+local.properties
+lebang-android.properties
+*.iml
+.DS_Store
