@@ -1,1 +1,39 @@
-*
+
+Actor client
+client->FileDownloader:addFile(url)
+FileDownloader->TaskList:addUrl(rul)
+activate TaskList
+ TaskList->FileDownloader:
+deactivate TaskList
+
+loop download is notRunning
+  TaskCreatorThread->TaskList:removeReturnRul()
+  activate TaskList
+   TaskList->TaskCreatorThread:url
+  deactivate TaskList 
+  alt url is null
+    TaskCreatorThread->TaskCreatorThread:wait()
+    
+  else 
+    TaskCreatorThread->TaskCreatorThread:getFileSize()
+    TaskCreatorThread->TaskCreatorThread:createSubsection()
+    TaskCreatorThread->TaskList:add()
+    activate TaskList
+     TaskList->TaskCreatorThread:
+    deactivate TaskList
+    TaskCreatorThread->TaskList:notifyAll()
+  end
+loop download is notRunning
+  DownloadThread->TaskList:getTaskItem()
+  activate TaskList
+   TaskList->DownloadThread:taskItem
+  deactivate TaskList 
+  alt taskItem is null
+    DownloadThread->DownloadThread:wait()
+    
+  else 
+    DownloadThread->DownloadThread:download()
+    DownloadThread->DownloadListener:update()
+  end
+
+end
