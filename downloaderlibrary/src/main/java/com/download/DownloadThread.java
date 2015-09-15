@@ -132,11 +132,11 @@ class DownloadThread extends Thread {
             if (!mFileDownloader.netWorkAble() || networkUnreachable) {
                 Log.e("Thread", "Thread " + getId() + " 无网络异常" + e.getMessage());
                 mTaskList.setApkInfoState(item.info.fileUrl, FileInfo.ERROR);
-                mFileDownloader.error(item.info.fileUrl, DownloadObserver.NETWORK_UNAVAILABLE_ERROR);
+                mFileDownloader.error(item.info.fileUrl, DownloadListener.NETWORK_UNAVAILABLE_ERROR);
             } else {
                 Log.e("Thread", "Thread " + getId() + " 未知异常" + e.getMessage());
                 mTaskList.setApkInfoState(item.info.fileUrl, FileInfo.ERROR);
-                mFileDownloader.error(item.info.fileUrl, DownloadObserver.UNKNOW_ERROR);
+                mFileDownloader.error(item.info.fileUrl, DownloadListener.UNKNOW_ERROR);
             }
             _wait();
         } finally {

@@ -55,7 +55,7 @@ public class TaskList {
         urls.add(url);
     }
 
-    public String getAndRemoveUrl(){
+    public String removeReturnRul(){
       if (urls.isEmpty()){
           return null;
       }

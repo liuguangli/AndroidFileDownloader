@@ -6,7 +6,7 @@ import android.os.Message;
 /**
  * 观察者，让上层（界面层）观察下层（下载线程）行为
  */
-public abstract class DownloadObserver {
+public abstract class DownloadListener {
     //类型定义
     public static final int UPDATE = 1;
     //错误类型的通知务必大于100
@@ -21,7 +21,7 @@ public abstract class DownloadObserver {
     /**
      * 必需在UI线程创建该对象
      */
-    public DownloadObserver() {
+    public DownloadListener() {
         mHandler = new Handler() {
             public void handleMessage(Message msg) {
                 if (msg.what == UPDATE) {

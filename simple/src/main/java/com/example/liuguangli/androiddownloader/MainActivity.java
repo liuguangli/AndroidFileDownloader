@@ -11,7 +11,7 @@ import android.widget.Button;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
-import com.download.DownloadObserver;
+import com.download.DownloadListener;
 import com.download.FileDownloader;
 import com.download.LogUtil;
 
@@ -19,7 +19,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     public static final  String TAG = "MainACT";
     private ProgressBar mBar;
-    FileDownloader mDownloader;
+
     private TextView mTvState;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -32,17 +32,17 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         Button button = (Button) findViewById(R.id.button);
         button.setOnClickListener(this);
         mTvState = (TextView) findViewById(R.id.tv_state);
-        mDownloader = FileDownloader.getInstance(getApplication());
-    }
+        }
 
     @Override
     public void onClick(View v) {
 
+        FileDownloader mDownloader  = FileDownloader.getInstance(getApplication());
 
         mDownloader.setExtend(".apk");
         mDownloader.setFilePath(Environment.getExternalStorageDirectory() + "/apk/");
         mDownloader.addFile("http://zhuzher.vanke.com/uip/zhuzher.apk");
-        mDownloader.setDownloadObserver(new DownloadObserver() {
+        mDownloader.setDownloadObserver(new DownloadListener() {
             @Override
             public void onUpdate(String apkUrl, String file, int completeSize, int apkFileSize) {
                 LogUtil.d(TAG,"apkurl:"+apkUrl);

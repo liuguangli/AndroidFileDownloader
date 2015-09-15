@@ -24,7 +24,7 @@ public class FileDownloader {
     private final int THREAD_COUNT = 5;//线程数
     private ArrayList<DownloadThread> threadList;//消费者线程集
     private TaskCreatorThread mFileAdder;//生产者线程
-    private DownloadObserver mObserver;//状态观察者
+    private DownloadListener mObserver;//状态观察者
     private Application context;
     private String mFolder = Environment.getExternalStorageDirectory()+"/fileDownload/";
     private String mExtend = ".apk";
@@ -131,7 +131,7 @@ public class FileDownloader {
     /**
      * 设置观察者以观察下载进度
      */
-    public synchronized void setDownloadObserver(DownloadObserver observer) {
+    public synchronized void setDownloadObserver(DownloadListener observer) {
         this.mObserver = observer;
     }
 
@@ -145,7 +145,7 @@ public class FileDownloader {
             info.completeSize += arg1;
             if (mObserver != null && info.completeSize > 0) {
                 Message msg = Message.obtain();
-                msg.what = DownloadObserver.UPDATE;
+                msg.what = DownloadListener.UPDATE;
                 msg.arg1 = info.completeSize;
                 msg.arg2 = info.fileSize;
                 msg.obj = info.fileUrl+","+file;
@@ -169,16 +169,16 @@ public class FileDownloader {
         FileInfo info = mTaskList.getFileInfoByUrl(fileUrl);
         if (info != null) {
             switch (state) {
-                case DownloadObserver.CREATE_APK_FILE_FAIL:
-                case DownloadObserver.GET_APK_SIZE_FAIL:
-                case DownloadObserver.UNKNOW_ERROR:
-                case DownloadObserver.EXIST_FULL_APK:
+                case DownloadListener.CREATE_APK_FILE_FAIL:
+                case DownloadListener.GET_APK_SIZE_FAIL:
+                case DownloadListener.UNKNOW_ERROR:
+                case DownloadListener.EXIST_FULL_APK:
                     info.state = FileInfo.ERROR;
 
                     delete(info);
 
                     break;
-                case DownloadObserver.NETWORK_UNAVAILABLE_ERROR:
+                case DownloadListener.NETWORK_UNAVAILABLE_ERROR:
                     info.state = FileInfo.ERROR;
                     break;
             }
@@ -208,7 +208,7 @@ public class FileDownloader {
     public void addFile(String url) {
         if (TextUtils.isEmpty(url)) return;
         if (!netWorkAble()) {
-            error(url, DownloadObserver.NETWORK_UNAVAILABLE_ERROR);
+            error(url, DownloadListener.NETWORK_UNAVAILABLE_ERROR);
             return;
         }
         Log.d(TAG, "(0)apkMap.containsKey(fileUrl);");

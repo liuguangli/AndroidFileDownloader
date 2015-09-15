@@ -6,7 +6,6 @@ import java.io.RandomAccessFile;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.ArrayList;
-import java.util.Vector;
 
 /**
  * Created by liuguangli on 15/9/11.
@@ -26,7 +25,7 @@ public class TaskCreatorThread extends Thread {
     @Override
     public void run() {
         while (mdownLoader.isRunning()){
-            String url = mTaskList.getAndRemoveUrl();
+            String url = mTaskList.removeReturnRul();
             if (url == null){
                 try {
                     synchronized (mTaskList){
@@ -53,21 +52,31 @@ public class TaskCreatorThread extends Thread {
             fileInfo = new FileInfo(url, 0, 0, apkFilePath);
             fileInfo._id = System.currentTimeMillis();
         }
-        fileInfo.fileSize = getApkFileSize(fileInfo);
+        fileInfo.fileSize = getFileSize(fileInfo);
         LogUtil.d(TAG,"fileSize:"+ fileInfo.fileSize);
         if (fileInfo.fileSize <= 0) {
             fileInfo.state = FileInfo.ERROR;
 
-            mdownLoader.error(url, DownloadObserver.GET_APK_SIZE_FAIL);//通知重新下载
+            mdownLoader.error(url, DownloadListener.GET_APK_SIZE_FAIL);//通知重新下载
             return;
 
         }
         boolean isSuccess = createApkFile(fileInfo);
         if (!isSuccess) {
             fileInfo.state = FileInfo.ERROR;
-            mdownLoader.error(url, DownloadObserver.CREATE_APK_FILE_FAIL);//通知重新下载
+            mdownLoader.error(url, DownloadListener.CREATE_APK_FILE_FAIL);//通知重新下载
             return ;
         }
+        createSubsection(fileInfo);
+        fileInfo.state = FileInfo.WAITING;
+        mdownLoader.update(url, fileInfo.filePath, 0);
+        mTaskList.add(fileInfo);
+
+
+        notifyDownloadThreads();
+    }
+
+    private void createSubsection(FileInfo fileInfo) {
         if (fileInfo.fileSize > 0) {
             LogUtil.d(TAG, "(4)fileInfo._id > 0 && fileInfo.fileSize > 0");
             fileInfo.fileItemList = new ArrayList<FileInfo.FileItem>();
@@ -92,13 +101,8 @@ public class TaskCreatorThread extends Thread {
                 fileInfo.fileItemList.add(fileItem);
             }
         }
-        fileInfo.state = FileInfo.WAITING;
-        mdownLoader.update(url, fileInfo.filePath, 0);
-        mTaskList.add(fileInfo);
-
-
-        notifyDownloadThreads();
     }
+
     private void notifyDownloadThreads(){
         synchronized (mTaskList){
             mTaskList.notifyAll();
@@ -108,7 +112,7 @@ public class TaskCreatorThread extends Thread {
     /**
      * 获取要下载的包大小
      */
-    private int getApkFileSize(FileInfo fileInfo) {
+    private int getFileSize(FileInfo fileInfo) {
         HttpURLConnection connection = null;
         int size = -1;
         try {
