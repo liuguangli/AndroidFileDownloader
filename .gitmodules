@@ -1,0 +1,3 @@
+[submodule "downloaderlibrary"]
+	path = downloaderlibrary
+	url = git@github.com:liuguangli/downloaderlibrary.git
