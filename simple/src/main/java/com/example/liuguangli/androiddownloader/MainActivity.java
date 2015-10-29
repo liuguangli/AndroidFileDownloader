@@ -1,6 +1,8 @@
 package com.example.liuguangli.androiddownloader;
 
+import android.content.Intent;
 import android.graphics.Color;
+import android.net.Uri;
 import android.os.Environment;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -14,6 +16,8 @@ import android.widget.TextView;
 import com.download.DownloadListener;
 import com.download.FileDownloader;
 import com.download.LogUtil;
+
+import java.io.File;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener{
 
@@ -37,7 +41,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     @Override
     public void onClick(View v) {
 
-        FileDownloader mDownloader  = FileDownloader.getInstance(getApplication());
+        final FileDownloader mDownloader  = FileDownloader.getInstance(getApplication());
 
         mDownloader.setExtend(".apk");
         mDownloader.setFilePath(Environment.getExternalStorageDirectory() + "/apk/");
@@ -58,7 +62,12 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
                 mTvState.setText("下载完成");
                 mTvState.setTextColor(Color.GREEN);
-                LogUtil.d(TAG,"onComplete:"+file);
+                LogUtil.d(TAG, "onComplete:" + file);
+                mDownloader.release();
+                Intent intent = new Intent(Intent.ACTION_VIEW);
+                intent.setDataAndType(Uri.fromFile(new File(file)), "application/vnd.android.package-archive");
+                startActivity(intent);
+
             }
 
             @Override
@@ -68,6 +77,12 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 mTvState.setTextColor(Color.RED);
             }
         });
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        FileDownloader.getInstance(getApplication()).release();
     }
 
     @Override
