@@ -2,7 +2,7 @@
 ##使用场景
 ###apk应用内更新，其他中小文件的下载，断点续传下载等，先来看看效果图：
 <br/>
-<img src="https://github.com/liuguangli/AndroidFileDownloader/blob/master/simple.jpeg" width="240" heigth="360"/>
+<img src="https://github.com/liuguangli/AndroidFileDownloader/blob/master/simple.gif" width="240" heigth="360"/>
 
 ##简单方便的调用接口
 ###调用者只要设置好下载路径、文件后缀，丢一个url即可开始下载，并且可以根据需要监听进度，例如：
