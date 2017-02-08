@@ -45,7 +45,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         mDownloader.setExtend(".apk");
         mDownloader.setFilePath(Environment.getExternalStorageDirectory() + "/apk/");
-        mDownloader.addFile("http://zhuzher.vanke.com/uip/zhuzher.apk");
+        mDownloader.addFile("http://a.wdjcdn.com/release/files/phoenix/5.51.20.13150/wandoujia-wandoujia-web_seo_google_binded_5.51.20.13150.apk");
         mDownloader.setDownloadObserver(new DownloadListener() {
             @Override
             public void onUpdate(String apkUrl, String file, int completeSize, int apkFileSize) {
@@ -71,8 +71,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             }
 
             @Override
-            public void onError(String apkUrl, int type, int state) {
-                LogUtil.e(TAG,"onError:state:"+state+",type:"+state);
+            public void onError(String apkUrl,  int type, int state) {
+                LogUtil.e(TAG,"onError:state:" + state + ",type:"+state);
                 mTvState.setText("Download error");
                 mTvState.setTextColor(Color.RED);
             }
