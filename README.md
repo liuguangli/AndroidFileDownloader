@@ -1,4 +1,7 @@
 # AndroidFileDownloader
+
+[![](https://jitpack.io/v/liuguangli/AndroidFileDownloader.svg)](https://jitpack.io/#liuguangli/AndroidFileDownloader)
+
 ##使用场景
 ###apk应用内更新，其他中小文件的下载，断点续传下载等，先来看看效果图：
 <br/>
