@@ -24,7 +24,7 @@
    
    
     dependencies {
-         compile 'com.github.liuguangli:downloaderlibrary:master-SNAPSHOT'
+         compile 'com.github.liuguangli:downloaderlibrary:-SNAPSHOT'
     }
 ##简单方便的调用接口
 ###调用者只要设置好下载路径、文件后缀，丢一个url即可开始下载，并且可以根据需要监听进度，例如：
